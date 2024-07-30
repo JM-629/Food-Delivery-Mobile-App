@@ -9,7 +9,11 @@ export const basketSlice = createSlice({
   initialState,
   reducers: {
     addToBasket: (state, action) => {
-      state.items.push(action.payload);
+      // Explicitly return a new state with the updated items array
+      return {
+        ...state,
+        items: [...state.items, action.payload],
+      };
     },
     removeFromBasket: (state, action) => {
       const index = state.items.findIndex(
@@ -17,11 +21,19 @@ export const basketSlice = createSlice({
       );
 
       if (index >= 0) {
-        state.items.splice(index, 1);
+        // Remove the item at the found index by creating a new array
+        return {
+          ...state,
+          items: [
+            ...state.items.slice(0, index), // Elements before the item to remove
+            ...state.items.slice(index + 1), // Elements after the item to remove
+          ],
+        };
       } else {
         console.warn(
           `Can't remove product (id: ${action.payload.id}) as it's not in the basket!`
         );
+        return state; // No change to the state if the item is not found
       }
     },
   },
