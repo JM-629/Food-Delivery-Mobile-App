@@ -9,11 +9,12 @@ export const basketSlice = createSlice({
   initialState,
   reducers: {
     addToBasket: (state, action) => {
-      // Explicitly return a new state with the updated items array
-      return {
-        ...state,
-        items: [...state.items, action.payload],
-      };
+      const index = state.items.findIndex(item => item.id === action.payload.id);
+      if (index >= 0) {
+        state.items[index].quantity += 1; // Assuming items have a quantity property
+      } else {
+        state.items.push({ ...action.payload, quantity: 1 });
+      }
     },
     removeFromBasket: (state, action) => {
       const index = state.items.findIndex(
