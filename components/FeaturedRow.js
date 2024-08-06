@@ -6,14 +6,8 @@ import sanityClient from "../sanity";
 
 const FeaturedRow = ({ id, title, description }) => {
   const [restaurants, setRestaurants] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Reset states before fetching new data
-    setLoading(true);
-    setError(null);
-
     // Fetch data from Sanity CMS based on the document type "featured" and the provided id
     sanityClient
       .fetch(
@@ -33,16 +27,11 @@ const FeaturedRow = ({ id, title, description }) => {
       )
       .then((data) => {
         setRestaurants(data?.restaurant || []);
-        setLoading(false); 
       })
       .catch((err) => {
-        setError('Failed to fetch data');
-        setLoading(false);
+        console.log('Failed to fetch data : ', err);
       });
   }, [id]);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
 
   return (
     <View>
